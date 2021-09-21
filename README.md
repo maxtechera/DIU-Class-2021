@@ -1,4 +1,7 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is the project used to share examples and challenges seen in class.
+
+UI Challenges
+https://docs.google.com/document/d/1BLiYht9lsT7rT9PLx3BgTXZYSZcVzlG9zi3Jjrdtz34/edit
 
 ## Getting Started
 
