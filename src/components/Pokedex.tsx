@@ -25,13 +25,13 @@ export const PokedexLogin = ({ setUser }: Props) => {
   );
 };
 
-export const Pokedex = ({}: Props) => {
-  const [pokemonId, setPokemonId] = React.useState();
+export const Pokedex = ({ pokemonId }: Props) => {
+  // const [pokemonId, setPokemonId] = React.useState();
   return (
     <Container>
       <LeftContainer>
         <DisplayContainer>
-          <PokemonList setPokemonId={setPokemonId} />
+          <PokemonList />
         </DisplayContainer>
       </LeftContainer>
       <InnerContainer>

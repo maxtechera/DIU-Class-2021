@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 type Props = {
   setPokemonId: any;
@@ -23,8 +25,10 @@ const transformPokemon = (pokemon: any, id: number) => ({
     .padStart(3, "0")}.png`,
 });
 
-const PokemonList = ({ setPokemonId }: Props) => {
+const PokemonList = ({}: Props) => {
   const [pokemons, setPokemons] = React.useState<Array<Pokemon>>([]);
+  const router = useRouter();
+  const pokemonId = router.query.pokemonId as string;
 
   React.useEffect(() => {
     // Fetch API list of pokemons
@@ -36,10 +40,12 @@ const PokemonList = ({ setPokemonId }: Props) => {
     <Container>
       <List>
         {pokemons?.map((pokemon) => (
-          <Item key={pokemon.id} onClick={() => setPokemonId(pokemon.id)}>
-            <Image src={pokemon.image} alt={pokemon.name} />
-            <Name>{pokemon.name}</Name>
-          </Item>
+          <Link key={pokemon.id} href={`/pokedex/${pokemon.id}`} passHref>
+            <Item selected={pokemonId === pokemon.id.toString()}>
+              <Image src={pokemon.image} alt={pokemon.name} />
+              <Name>{pokemon.name}</Name>
+            </Item>
+          </Link>
         ))}
       </List>
     </Container>
@@ -60,10 +66,17 @@ const List = styled.div`
   grid-row-gap: 8px;
 `;
 
-const Item = styled.div`
+const Item = styled.a<{ selected: boolean }>`
   width: 100%;
   border-radius: 5px;
   padding: 8px;
+  transition: 0.3s;
+  ${({ selected }) => `
+    background-color: ${selected ? "rgba(255,255,255,0.5)" : "transparent"};
+  `}
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const Image = styled.img`
