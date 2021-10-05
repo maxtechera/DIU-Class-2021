@@ -7,7 +7,7 @@ import pokemonLogo from "./poke.png";
 
 type Props = {
   setUser: (user: any) => void;
-  pokemonId?: string;
+  pokemons?: Array<any>;
 };
 
 export const PokedexLogin = ({ setUser }: Props) => {
@@ -25,13 +25,13 @@ export const PokedexLogin = ({ setUser }: Props) => {
   );
 };
 
-export const Pokedex = ({ pokemonId }: Props) => {
+export const Pokedex = ({ pokemonId, pokemons }: Props) => {
   // const [pokemonId, setPokemonId] = React.useState();
   return (
     <Container>
       <LeftContainer>
         <DisplayContainer>
-          <PokemonList />
+          <PokemonList pokemons={pokemons} />
         </DisplayContainer>
       </LeftContainer>
       <InnerContainer>

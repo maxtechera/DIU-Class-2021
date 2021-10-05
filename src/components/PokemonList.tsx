@@ -2,9 +2,12 @@ import React from "react";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
+import POKEMONS_QUERY from "../core/POKEMONS_QUERY";
 
 type Props = {
-  setPokemonId: any;
+  // setPokemonId: any;
+  pokemons?: Array<Pokemon>;
 };
 interface Pokemon {
   id: number;
@@ -12,34 +15,24 @@ interface Pokemon {
   image: string;
 }
 
-const getPokemons = () =>
-  fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
-    .then((response) => response.json())
-    .then((data) => data?.results?.map(transformPokemon));
-
-const transformPokemon = (pokemon: any, id: number) => ({
-  id: id + 1,
-  name: pokemon.name,
-  image: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${(id + 1)
-    .toString()
-    .padStart(3, "0")}.png`,
-});
-
-const PokemonList = ({}: Props) => {
-  const [pokemons, setPokemons] = React.useState<Array<Pokemon>>([]);
+const PokemonList = ({ pokemons }: Props) => {
+  // const [pokemons, setPokemons] = React.useState<Array<Pokemon>>([]);
+  const { data, loading, error } = useQuery(POKEMONS_QUERY);
   const router = useRouter();
   const pokemonId = router.query.pokemonId as string;
 
-  React.useEffect(() => {
-    // Fetch API list of pokemons
-    // Set the state to the list of pokemons
-    getPokemons().then(setPokemons);
-  }, []);
+  // React.useEffect(() => {
+  //   // Fetch API list of pokemons
+  //   // Set the state to the list of pokemons
+  //   getPokemons().then(setPokemons);
+  // }, []);
+  console.log("Server", pokemons);
+  console.log("Apollo", { data, loading, error });
 
   return (
     <Container>
       <List>
-        {pokemons?.map((pokemon) => (
+        {data?.pokemons?.map((pokemon: any) => (
           <Link key={pokemon.id} href={`/pokedex/${pokemon.id}`} passHref>
             <Item selected={pokemonId === pokemon.id.toString()}>
               <Image src={pokemon.image} alt={pokemon.name} />

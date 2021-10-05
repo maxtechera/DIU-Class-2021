@@ -1,40 +1,46 @@
-import * as React from "react";
-import type { NextPage } from "next";
 import styled from "@emotion/styled";
 import Pokedex, { PokedexLogin } from "../../src/components/Pokedex";
-import { useRouter } from "next/router";
+import useUser from "../../src/core/useUser";
 
-const useUser = () => {
-  const [user, setUserState] = React.useState(null);
+interface Props {
+  pokemons?: Array<any>;
+}
 
-  React.useEffect(() => {
-    // Inializarlo con el valor en localStorage
-    if (typeof localStorage !== "undefined") {
-      setUserState(JSON.parse(localStorage.getItem("user") ?? ""));
-    }
-  }, []);
-
-  const setUser = (newUser: any) => {
-    // Setear el usuario en estado
-    setUserState(newUser);
-    // Setear el usuario en localStorage
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ username: newUser?.username })
-    );
-  };
-
-  return [user, setUser];
-};
-
-const Home: NextPage = () => {
-  const [user, setUser] = useUser();
-
+const Home = ({ pokemons }: Props) => {
+  const { user, setUser } = useUser();
+  console.log("cliente", pokemons);
   return (
     <Container>
-      {user ? <Pokedex /> : <PokedexLogin setUser={setUser} />}
+      {user ? (
+        <Pokedex pokemons={pokemons} setUser={setUser} />
+      ) : (
+        <PokedexLogin setUser={setUser} />
+      )}
     </Container>
   );
+};
+
+const getPokemons = () =>
+  fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
+    .then((response) => response.json())
+    .then((data) => data?.results?.map(transformPokemon));
+
+const transformPokemon = (pokemon: any, id: number) => ({
+  id: id + 1,
+  name: pokemon.name,
+  image: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${(id + 1)
+    .toString()
+    .padStart(3, "0")}.png`,
+});
+
+export const getServerSideProps = async () => {
+  console.log("GetServerSideProps");
+  const pokemons = await getPokemons();
+  return {
+    props: {
+      pokemons,
+    },
+  };
 };
 
 const Container = styled.div`

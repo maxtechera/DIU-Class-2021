@@ -1,13 +1,13 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import Head from "next/head";
-import { Global, css } from "@emotion/react";
+import { ApolloProvider } from "@apollo/client";
+import client from "../src/core/client";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <ApolloProvider client={client}>
       <Component {...pageProps} />
-    </>
+    </ApolloProvider>
   );
 }
 export default MyApp;
