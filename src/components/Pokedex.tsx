@@ -6,8 +6,8 @@ import PokemonList from "./PokemonList";
 import pokemonLogo from "./poke.png";
 
 type Props = {
-  setUser: (user: any) => void;
   pokemons?: Array<any>;
+  pokemonId?: string;
 };
 
 export const PokedexLogin = ({ setUser }: Props) => {

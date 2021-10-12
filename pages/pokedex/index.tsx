@@ -7,15 +7,11 @@ interface Props {
 }
 
 const Home = ({ pokemons }: Props) => {
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   console.log("cliente", pokemons);
   return (
     <Container>
-      {user ? (
-        <Pokedex pokemons={pokemons} setUser={setUser} />
-      ) : (
-        <PokedexLogin setUser={setUser} />
-      )}
+      {user ? <Pokedex pokemons={pokemons} /> : <PokedexLogin />}
     </Container>
   );
 };

@@ -1,32 +1,39 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { useMutation } from "@apollo/client";
+import LOGIN_MUTATION from "../core/LOGIN_MUTATION";
+import USER_QUERY from "../core/USER_QUERY";
 
-type Props = {
-  setUser: (user: any) => void;
-};
+type Props = {};
 
 interface FormState {
   username?: string;
   password?: string;
 }
 
-const PokemonDetail = ({ setUser }: Props) => {
+const PokemonDetail = ({}: Props) => {
   const [form, setForm] = React.useState<FormState>({});
-  const [error, setError] = React.useState("");
 
-  const handleSubmit = () => {
-    setError("");
-    if (form.username && form.password) {
-      if (form.username === "admin" && form.password === "admin") {
-        // Send username and password to server
-        // Handle success
-        // Get the user from response
-        setUser(form);
-      } else {
-        setError("Invalid username or password");
-      }
+  const [login, { loading, error }] = useMutation<any, { input: FormState }>(
+    LOGIN_MUTATION,
+    {
+      // Refetch query, extra request, gets data from API
+      // refetchQueries: [USER_QUERY],
+
+      // Update cache directly
+      update: (cache, { data }) => {
+        const user = data?.login;
+        if (user) {
+          cache.writeQuery({
+            query: USER_QUERY,
+            data: { me: user },
+          });
+        }
+      },
     }
-  };
+  );
+
+  const handleSubmit = () => login({ variables: { input: form } });
 
   const handleChangeName = (evt: any) => {
     setForm({
@@ -46,14 +53,21 @@ const PokemonDetail = ({ setUser }: Props) => {
     <Container>
       <Inner>
         <Title>React Pokédex</Title>
-        <Input placeholder="Trainer name" onChange={handleChangeName} />
         <Input
+          disabled={loading}
+          placeholder="Trainer name"
+          onChange={handleChangeName}
+        />
+        <Input
+          disabled={loading}
           placeholder="Password"
           type="password"
           onChange={handleChangePassword}
         />
-        <Button onClick={handleSubmit}>Login</Button>
-        {error ? <p style={{ color: "red" }}>{error}</p> : null}
+        <Button onClick={handleSubmit} disabled={loading}>
+          {loading ? "Submitting..." : "Login"}
+        </Button>
+        {error ? <p style={{ color: "red" }}>{JSON.stringify(error)}</p> : null}
       </Inner>
     </Container>
   );

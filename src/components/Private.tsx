@@ -1,7 +1,6 @@
 import * as React from "react";
 import Router from "next/router";
-import useUser from "../src/core/useUser";
-import { Props } from "./protected";
+import useUser from "../core/useUser";
 
 // With Apollo useQuery
 // const Private = ({ children }: Props) => {
@@ -21,6 +20,9 @@ import { Props } from "./protected";
 //   if (user) return children;
 // };
 
+interface Props {
+  children: React.ReactNode;
+}
 const Private = ({ children }: Props) => {
   // Check if user is loggedin and verify permisson
   // Handle loading and error states
