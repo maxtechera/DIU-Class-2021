@@ -10,12 +10,6 @@ const getUser = (req: any) => {
     const user = jwt.verify(token, "secret");
     return user;
   }
-
-  return {
-    id: 1,
-    name: "Max",
-    username: "max",
-  };
 };
 
 const server = new ApolloServer({
