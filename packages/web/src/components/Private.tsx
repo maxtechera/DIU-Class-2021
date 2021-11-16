@@ -23,6 +23,7 @@ import useUser from "../core/useUser";
 interface Props {
   children: React.ReactNode;
 }
+
 const Private = ({ children }: Props) => {
   // Check if user is loggedin and verify permisson
   // Handle loading and error states
@@ -35,7 +36,7 @@ const Private = ({ children }: Props) => {
   }, [loading, user]);
 
   // If yes, render children
-  if (user) return children;
+  if (user) return <>{children}</>;
 };
 
 export default Private;
