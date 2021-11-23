@@ -4,7 +4,7 @@ const typeDefs = gql`
   type Query {
     hello: String
     pokemons: [Pokemon]
-
+    pokemon(id: ID!): Pokemon
     me: User
   }
 
@@ -28,12 +28,14 @@ const typeDefs = gql`
     id: ID!
     name: String
     image: String
+    description: String
   }
 
   type User {
     id: ID!
     username: String!
     name: String
+    token: String
   }
 `;
 

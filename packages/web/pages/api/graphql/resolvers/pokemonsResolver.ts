@@ -6,7 +6,4 @@ export const pokemonsResolver = () =>
 const transformPokemon = (pokemon: any, id: number) => ({
   id: id + 1,
   name: pokemon.name,
-  image: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${(id + 1)
-    .toString()
-    .padStart(3, "0")}.png`,
 });

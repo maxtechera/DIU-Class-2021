@@ -3,10 +3,18 @@ import jwt from "jsonwebtoken";
 import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
 import cookies from "./cookies";
+import corsConstructor from "micro-cors";
+import { send } from "micro";
+import { User } from "./models";
+
+const cors = corsConstructor();
 
 const getUser = (req: any) => {
-  const token = req.cookies.token;
+  let token = req.cookies.token ?? req.headers.authorization;
   if (token) {
+    if (token?.includes("Bearer ")) {
+      token = token.split("Bearer ")[1];
+    }
     const user = jwt.verify(token, "secret");
     return user;
   }
@@ -17,6 +25,7 @@ const server = new ApolloServer({
   resolvers,
   context: ({ req, res }) => {
     return {
+      models: { User },
       cookie: res.cookie,
       user: getUser(req),
     };
@@ -33,4 +42,8 @@ export const config = {
 
 const handler = server.createHandler({ path: "/api/graphql" });
 
-export default cookies(handler);
+export default cookies(
+  cors((req, res) =>
+    req.method === "OPTIONS" ? send(res, 200, "ok") : handler(req, res)
+  )
+);
